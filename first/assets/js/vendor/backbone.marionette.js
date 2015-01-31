@@ -1,6 +1,6 @@
 // MarionetteJS (Backbone.Marionette)
 // ----------------------------------
-// v2.3.1
+// v2.3.2
 //
 // Copyright (c)2015 Derick Bailey, Muted Solutions, LLC.
 // Distributed under MIT license
@@ -9,12 +9,12 @@
 
 
 /*!
-* Includes BabySitter
-* https://github.com/marionettejs/backbone.babysitter/
-*
-* Includes Wreqr
-* https://github.com/marionettejs/backbone.wreqr/
-*/
+ * Includes BabySitter
+ * https://github.com/marionettejs/backbone.babysitter/
+ *
+ * Includes Wreqr
+ * https://github.com/marionettejs/backbone.wreqr/
+ */
 
 
 (function(root, factory) {
@@ -493,7 +493,7 @@
 
   var Marionette = Backbone.Marionette = {};
 
-  Marionette.VERSION = '2.3.1';
+  Marionette.VERSION = '2.3.2';
 
   Marionette.noConflict = function() {
     root.Marionette = previousMarionette;
@@ -550,6 +550,10 @@
   // undefined return a default value
   Marionette._getValue = function(value, context, params) {
     if (_.isFunction(value)) {
+      // We need to ensure that params is not undefined
+      // to prevent `apply` from failing in ie8
+      params = params || [];
+
       value = value.apply(context, params);
     }
     return value;
@@ -610,9 +614,9 @@
   // http://backbonejs.org/docs/backbone.html#section-121
   Marionette.actAsCollection = function(object, listProperty) {
     var methods = ['forEach', 'each', 'map', 'find', 'detect', 'filter',
-    'select', 'reject', 'every', 'all', 'some', 'any', 'include',
-    'contains', 'invoke', 'toArray', 'first', 'initial', 'rest',
-    'last', 'without', 'isEmpty', 'pluck'];
+      'select', 'reject', 'every', 'all', 'some', 'any', 'include',
+      'contains', 'invoke', 'toArray', 'first', 'initial', 'rest',
+      'last', 'without', 'isEmpty', 'pluck'];
 
     _.each(methods, function(method) {
       object[method] = function() {
@@ -705,8 +709,8 @@
   // will trigger a "show" event or invoke onShow the view.
   Marionette.triggerMethodOn = function(context) {
     var fnc = _.isFunction(context.triggerMethod) ?
-    context.triggerMethod :
-    Marionette.triggerMethod;
+                  context.triggerMethod :
+                  Marionette.triggerMethod;
 
     return fnc.apply(context, _.rest(arguments));
   };
@@ -753,14 +757,13 @@
   // Bind Entity Events & Unbind Entity Events
   // -----------------------------------------
   //
-  // These methods are used to bind/unbind a backbone "entity" (collection/model)
+  // These methods are used to bind/unbind a backbone "entity" (e.g. collection/model)
   // to methods on a target object.
   //
-  // The first parameter, `target`, must have a `listenTo` method from the
-  // EventBinder object.
+  // The first parameter, `target`, must have the Backbone.Events module mixed in.
   //
-  // The second parameter is the entity (Backbone.Model or Backbone.Collection)
-  // to bind the events from.
+  // The second parameter is the `entity` (Backbone.Model, Backbone.Collection or
+  // any object that has Backbone.Events mixed in) to bind the events from.
   //
   // The third parameter is a hash of { "event:name": "eventHandler" }
   // configuration. Multiple handlers can be separated by a space. A
@@ -779,7 +782,7 @@
         var method = target[methodName];
         if (!method) {
           throw new Marionette.Error('Method "' + methodName +
-          '" was configured as an event handler, but does not exist.');
+            '" was configured as an event handler, but does not exist.');
         }
 
         target.listenTo(entity, evt, method);
@@ -1102,9 +1105,9 @@
       if (_shouldDestroyView) {
         this.empty();
 
-        // A `destroy` event is attached to the clean up manually removed views.
-        // We need to detach this event when a new view is going to be shown as it
-        // is no longer relevant.
+      // A `destroy` event is attached to the clean up manually removed views.
+      // We need to detach this event when a new view is going to be shown as it
+      // is no longer relevant.
       } else if (isChangingView && _shouldShowView) {
         this.currentView.off('destroy', this.empty, this);
       }
@@ -2244,13 +2247,13 @@
     },
 
     // Render and show the emptyView. Similar to addChild method
-    // but "child:added" events are not fired, and the event from
+    // but "add:child" events are not fired, and the event from
     // emptyView are not forwarded
     addEmptyView: function(child, EmptyView) {
 
       // get the emptyViewOptions, falling back to childViewOptions
       var emptyViewOptions = this.getOption('emptyViewOptions') ||
-      this.getOption('childViewOptions');
+                            this.getOption('childViewOptions');
 
       if (_.isFunction(emptyViewOptions)){
         emptyViewOptions = emptyViewOptions.call(this, child, this._emptyViewIndex);
@@ -2850,9 +2853,9 @@
 
     _getImmediateChildren: function() {
       return _.chain(this.regionManager.getRegions())
-      .pluck('currentView')
-      .compact()
-      .value();
+        .pluck('currentView')
+        .compact()
+        .value();
     }
   });
 
@@ -2963,7 +2966,7 @@
             // to generate a non colliding event namespace
             // http://api.jquery.com/event.namespace/
             var eventName = match[1] + '.' + [this.cid, i, j++, ' '].join(''),
-            selector  = match[2];
+                selector  = match[2];
 
             var eventKey  = eventName + selector;
             var handler   = _.isFunction(behaviour) ? behaviour : b[behaviour];
@@ -3434,155 +3437,155 @@
         Marionette,
         Backbone.$, _,
         customArgs
-        ]);
+      ]);
 
-        definition.apply(this, args);
-      },
+      definition.apply(this, args);
+    },
 
-      // Internal method: set up new copies of initializers and finalizers.
-      // Calling this method will wipe out all existing initializers and
-      // finalizers.
-      _setupInitializersAndFinalizers: function() {
-        this._initializerCallbacks = new Marionette.Callbacks();
-        this._finalizerCallbacks = new Marionette.Callbacks();
-      },
+    // Internal method: set up new copies of initializers and finalizers.
+    // Calling this method will wipe out all existing initializers and
+    // finalizers.
+    _setupInitializersAndFinalizers: function() {
+      this._initializerCallbacks = new Marionette.Callbacks();
+      this._finalizerCallbacks = new Marionette.Callbacks();
+    },
 
-      // import the `triggerMethod` to trigger events with corresponding
-      // methods if the method exists
-      triggerMethod: Marionette.triggerMethod
-    });
+    // import the `triggerMethod` to trigger events with corresponding
+    // methods if the method exists
+    triggerMethod: Marionette.triggerMethod
+  });
 
-    // Class methods to create modules
-    _.extend(Marionette.Module, {
+  // Class methods to create modules
+  _.extend(Marionette.Module, {
 
-      // Create a module, hanging off the app parameter as the parent object.
-      create: function(app, moduleNames, moduleDefinition) {
-        var module = app;
+    // Create a module, hanging off the app parameter as the parent object.
+    create: function(app, moduleNames, moduleDefinition) {
+      var module = app;
 
-        // get the custom args passed in after the module definition and
-        // get rid of the module name and definition function
-        var customArgs = _.rest(arguments, 3);
+      // get the custom args passed in after the module definition and
+      // get rid of the module name and definition function
+      var customArgs = _.rest(arguments, 3);
 
-        // Split the module names and get the number of submodules.
-        // i.e. an example module name of `Doge.Wow.Amaze` would
-        // then have the potential for 3 module definitions.
-        moduleNames = moduleNames.split('.');
-        var length = moduleNames.length;
+      // Split the module names and get the number of submodules.
+      // i.e. an example module name of `Doge.Wow.Amaze` would
+      // then have the potential for 3 module definitions.
+      moduleNames = moduleNames.split('.');
+      var length = moduleNames.length;
 
-        // store the module definition for the last module in the chain
-        var moduleDefinitions = [];
-        moduleDefinitions[length - 1] = moduleDefinition;
+      // store the module definition for the last module in the chain
+      var moduleDefinitions = [];
+      moduleDefinitions[length - 1] = moduleDefinition;
 
-        // Loop through all the parts of the module definition
-        _.each(moduleNames, function(moduleName, i) {
-          var parentModule = module;
-          module = this._getModule(parentModule, moduleName, app, moduleDefinition);
-          this._addModuleDefinition(parentModule, module, moduleDefinitions[i], customArgs);
-        }, this);
+      // Loop through all the parts of the module definition
+      _.each(moduleNames, function(moduleName, i) {
+        var parentModule = module;
+        module = this._getModule(parentModule, moduleName, app, moduleDefinition);
+        this._addModuleDefinition(parentModule, module, moduleDefinitions[i], customArgs);
+      }, this);
 
-        // Return the last module in the definition chain
-        return module;
-      },
+      // Return the last module in the definition chain
+      return module;
+    },
 
-      _getModule: function(parentModule, moduleName, app, def, args) {
-        var options = _.extend({}, def);
-        var ModuleClass = this.getClass(def);
+    _getModule: function(parentModule, moduleName, app, def, args) {
+      var options = _.extend({}, def);
+      var ModuleClass = this.getClass(def);
 
-        // Get an existing module of this name if we have one
-        var module = parentModule[moduleName];
+      // Get an existing module of this name if we have one
+      var module = parentModule[moduleName];
 
-        if (!module) {
-          // Create a new module if we don't have one
-          module = new ModuleClass(moduleName, app, options);
-          parentModule[moduleName] = module;
-          // store the module on the parent
-          parentModule.submodules[moduleName] = module;
-        }
-
-        return module;
-      },
-
-      // ## Module Classes
-      //
-      // Module classes can be used as an alternative to the define pattern.
-      // The extend function of a Module is identical to the extend functions
-      // on other Backbone and Marionette classes.
-      // This allows module lifecyle events like `onStart` and `onStop` to be called directly.
-      getClass: function(moduleDefinition) {
-        var ModuleClass = Marionette.Module;
-
-        if (!moduleDefinition) {
-          return ModuleClass;
-        }
-
-        // If all of the module's functionality is defined inside its class,
-        // then the class can be passed in directly. `MyApp.module("Foo", FooModule)`.
-        if (moduleDefinition.prototype instanceof ModuleClass) {
-          return moduleDefinition;
-        }
-
-        return moduleDefinition.moduleClass || ModuleClass;
-      },
-
-      // Add the module definition and add a startWithParent initializer function.
-      // This is complicated because module definitions are heavily overloaded
-      // and support an anonymous function, module class, or options object
-      _addModuleDefinition: function(parentModule, module, def, args) {
-        var fn = this._getDefine(def);
-        var startWithParent = this._getStartWithParent(def, module);
-
-        if (fn) {
-          module.addDefinition(fn, args);
-        }
-
-        this._addStartWithParent(parentModule, module, startWithParent);
-      },
-
-      _getStartWithParent: function(def, module) {
-        var swp;
-
-        if (_.isFunction(def) && (def.prototype instanceof Marionette.Module)) {
-          swp = module.constructor.prototype.startWithParent;
-          return _.isUndefined(swp) ? true : swp;
-        }
-
-        if (_.isObject(def)) {
-          swp = def.startWithParent;
-          return _.isUndefined(swp) ? true : swp;
-        }
-
-        return true;
-      },
-
-      _getDefine: function(def) {
-        if (_.isFunction(def) && !(def.prototype instanceof Marionette.Module)) {
-          return def;
-        }
-
-        if (_.isObject(def)) {
-          return def.define;
-        }
-
-        return null;
-      },
-
-      _addStartWithParent: function(parentModule, module, startWithParent) {
-        module.startWithParent = module.startWithParent && startWithParent;
-
-        if (!module.startWithParent || !!module.startWithParentIsConfigured) {
-          return;
-        }
-
-        module.startWithParentIsConfigured = true;
-
-        parentModule.addInitializer(function(options) {
-          if (module.startWithParent) {
-            module.start(options);
-          }
-        });
+      if (!module) {
+        // Create a new module if we don't have one
+        module = new ModuleClass(moduleName, app, options);
+        parentModule[moduleName] = module;
+        // store the module on the parent
+        parentModule.submodules[moduleName] = module;
       }
-    });
+
+      return module;
+    },
+
+    // ## Module Classes
+    //
+    // Module classes can be used as an alternative to the define pattern.
+    // The extend function of a Module is identical to the extend functions
+    // on other Backbone and Marionette classes.
+    // This allows module lifecyle events like `onStart` and `onStop` to be called directly.
+    getClass: function(moduleDefinition) {
+      var ModuleClass = Marionette.Module;
+
+      if (!moduleDefinition) {
+        return ModuleClass;
+      }
+
+      // If all of the module's functionality is defined inside its class,
+      // then the class can be passed in directly. `MyApp.module("Foo", FooModule)`.
+      if (moduleDefinition.prototype instanceof ModuleClass) {
+        return moduleDefinition;
+      }
+
+      return moduleDefinition.moduleClass || ModuleClass;
+    },
+
+    // Add the module definition and add a startWithParent initializer function.
+    // This is complicated because module definitions are heavily overloaded
+    // and support an anonymous function, module class, or options object
+    _addModuleDefinition: function(parentModule, module, def, args) {
+      var fn = this._getDefine(def);
+      var startWithParent = this._getStartWithParent(def, module);
+
+      if (fn) {
+        module.addDefinition(fn, args);
+      }
+
+      this._addStartWithParent(parentModule, module, startWithParent);
+    },
+
+    _getStartWithParent: function(def, module) {
+      var swp;
+
+      if (_.isFunction(def) && (def.prototype instanceof Marionette.Module)) {
+        swp = module.constructor.prototype.startWithParent;
+        return _.isUndefined(swp) ? true : swp;
+      }
+
+      if (_.isObject(def)) {
+        swp = def.startWithParent;
+        return _.isUndefined(swp) ? true : swp;
+      }
+
+      return true;
+    },
+
+    _getDefine: function(def) {
+      if (_.isFunction(def) && !(def.prototype instanceof Marionette.Module)) {
+        return def;
+      }
+
+      if (_.isObject(def)) {
+        return def.define;
+      }
+
+      return null;
+    },
+
+    _addStartWithParent: function(parentModule, module, startWithParent) {
+      module.startWithParent = module.startWithParent && startWithParent;
+
+      if (!module.startWithParent || !!module.startWithParentIsConfigured) {
+        return;
+      }
+
+      module.startWithParentIsConfigured = true;
+
+      parentModule.addInitializer(function(options) {
+        if (module.startWithParent) {
+          module.start(options);
+        }
+      });
+    }
+  });
 
 
-    return Marionette;
-  }));
+  return Marionette;
+}));

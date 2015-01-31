@@ -15,12 +15,12 @@
       root.Backbone = factory(root, exports, _, $);
     });
 
-    // Next for Node.js or CommonJS. jQuery may not be needed as a module.
+  // Next for Node.js or CommonJS. jQuery may not be needed as a module.
   } else if (typeof exports !== 'undefined') {
     var _ = require('underscore');
     factory(root, exports, _);
 
-    // Finally, as a browser global.
+  // Finally, as a browser global.
   } else {
     root.Backbone = factory(root, {}, root._, (root.jQuery || root.Zepto || root.ender || root.$));
   }
@@ -123,7 +123,7 @@
             for (j = 0, k = events.length; j < k; j++) {
               ev = events[j];
               if ((callback && callback !== ev.callback && callback !== ev.callback._callback) ||
-              (context && context !== ev.context)) {
+                  (context && context !== ev.context)) {
                 retain.push(ev);
               }
             }
@@ -532,9 +532,9 @@
     // that will be called.
     url: function() {
       var base =
-      _.result(this, 'urlRoot') ||
-      _.result(this.collection, 'url') ||
-      urlError();
+        _.result(this, 'urlRoot') ||
+        _.result(this.collection, 'url') ||
+        urlError();
       if (this.isNew()) return base;
       return base.replace(/([^\/])$/, '$1/') + encodeURIComponent(this.id);
     },
@@ -701,7 +701,7 @@
           }
           models[i] = existing;
 
-          // If this is a new, valid model, push it to the `toAdd` list.
+        // If this is a new, valid model, push it to the `toAdd` list.
         } else if (add) {
           model = models[i] = this._prepareModel(attrs, options);
           if (!model) continue;
@@ -952,11 +952,11 @@
   // 90% of the core usefulness of Backbone Collections is actually implemented
   // right here:
   var methods = ['forEach', 'each', 'map', 'collect', 'reduce', 'foldl',
-  'inject', 'reduceRight', 'foldr', 'find', 'detect', 'filter', 'select',
-  'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke',
-  'max', 'min', 'toArray', 'size', 'first', 'head', 'take', 'initial', 'rest',
-  'tail', 'drop', 'last', 'without', 'difference', 'indexOf', 'shuffle',
-  'lastIndexOf', 'isEmpty', 'chain', 'sample'];
+    'inject', 'reduceRight', 'foldr', 'find', 'detect', 'filter', 'select',
+    'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke',
+    'max', 'min', 'toArray', 'size', 'first', 'head', 'take', 'initial', 'rest',
+    'tail', 'drop', 'last', 'without', 'difference', 'indexOf', 'shuffle',
+    'lastIndexOf', 'isEmpty', 'chain', 'sample'];
 
   // Mix in each Underscore method as a proxy to `Collection#models`.
   _.each(methods, function(method) {
@@ -1191,8 +1191,8 @@
   };
 
   var noXhrPatch =
-  typeof window !== 'undefined' && !!window.ActiveXObject &&
-  !(window.XMLHttpRequest && (new XMLHttpRequest).dispatchEvent);
+    typeof window !== 'undefined' && !!window.ActiveXObject &&
+      !(window.XMLHttpRequest && (new XMLHttpRequest).dispatchEvent);
 
   // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
   var methodMap = {
@@ -1287,11 +1287,11 @@
     // against the current location hash.
     _routeToRegExp: function(route) {
       route = route.replace(escapeRegExp, '\\$&')
-      .replace(optionalParam, '(?:$1)?')
-      .replace(namedParam, function(match, optional) {
-        return optional ? match : '([^/?]+)';
-      })
-      .replace(splatParam, '([^?]*?)');
+                   .replace(optionalParam, '(?:$1)?')
+                   .replace(namedParam, function(match, optional) {
+                     return optional ? match : '([^/?]+)';
+                   })
+                   .replace(splatParam, '([^?]*?)');
       return new RegExp('^' + route + '(?:\\?([\\s\\S]*))?$');
     },
 
@@ -1433,8 +1433,8 @@
           // Return immediately as browser will do redirect to new url
           return true;
 
-          // Or if we've started out with a hash-based route, but we're currently
-          // in a browser where it could be `pushState`-based instead...
+        // Or if we've started out with a hash-based route, but we're currently
+        // in a browser where it could be `pushState`-based instead...
         } else if (this._hasPushState && this.atRoot() && loc.hash) {
           this.fragment = this.getHash().replace(routeStripper, '');
           this.history.replaceState({}, document.title, this.root + this.fragment);
@@ -1510,8 +1510,8 @@
       if (this._hasPushState) {
         this.history[options.replace ? 'replaceState' : 'pushState']({}, document.title, url);
 
-        // If hash changes haven't been explicitly disabled, update the hash
-        // fragment to store history.
+      // If hash changes haven't been explicitly disabled, update the hash
+      // fragment to store history.
       } else if (this._wantsHashChange) {
         this._updateHash(this.location, fragment, options.replace);
         if (this.iframe && (fragment !== this.getFragment(this.getHash(this.iframe)))) {
@@ -1522,8 +1522,8 @@
           this._updateHash(this.iframe.location, fragment, options.replace);
         }
 
-        // If you've told us that you explicitly don't want fallback hashchange-
-        // based history, then `navigate` becomes a page refresh.
+      // If you've told us that you explicitly don't want fallback hashchange-
+      // based history, then `navigate` becomes a page refresh.
       } else {
         return this.location.assign(url);
       }

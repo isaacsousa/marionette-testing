@@ -19,18 +19,18 @@
 
   // Create quick reference variables for speed access to core prototypes.
   var
-  push             = ArrayProto.push,
-  slice            = ArrayProto.slice,
-  concat           = ArrayProto.concat,
-  toString         = ObjProto.toString,
-  hasOwnProperty   = ObjProto.hasOwnProperty;
+    push             = ArrayProto.push,
+    slice            = ArrayProto.slice,
+    concat           = ArrayProto.concat,
+    toString         = ObjProto.toString,
+    hasOwnProperty   = ObjProto.hasOwnProperty;
 
   // All **ECMAScript 5** native function implementations that we hope to use
   // are declared here.
   var
-  nativeIsArray      = Array.isArray,
-  nativeKeys         = Object.keys,
-  nativeBind         = FuncProto.bind;
+    nativeIsArray      = Array.isArray,
+    nativeKeys         = Object.keys,
+    nativeBind         = FuncProto.bind;
 
   // Create a safe reference to the Underscore object for use below.
   var _ = function(obj) {
@@ -116,9 +116,9 @@
     if (obj == null) return [];
     iteratee = _.iteratee(iteratee, context);
     var keys = obj.length !== +obj.length && _.keys(obj),
-    length = (keys || obj).length,
-    results = Array(length),
-    currentKey;
+        length = (keys || obj).length,
+        results = Array(length),
+        currentKey;
     for (var index = 0; index < length; index++) {
       currentKey = keys ? keys[index] : index;
       results[index] = iteratee(obj[currentKey], currentKey, obj);
@@ -134,8 +134,8 @@
     if (obj == null) obj = [];
     iteratee = createCallback(iteratee, context, 4);
     var keys = obj.length !== +obj.length && _.keys(obj),
-    length = (keys || obj).length,
-    index = 0, currentKey;
+        length = (keys || obj).length,
+        index = 0, currentKey;
     if (arguments.length < 3) {
       if (!length) throw new TypeError(reduceError);
       memo = obj[keys ? keys[index++] : index++];
@@ -152,8 +152,8 @@
     if (obj == null) obj = [];
     iteratee = createCallback(iteratee, context, 4);
     var keys = obj.length !== + obj.length && _.keys(obj),
-    index = (keys || obj).length,
-    currentKey;
+        index = (keys || obj).length,
+        currentKey;
     if (arguments.length < 3) {
       if (!index) throw new TypeError(reduceError);
       memo = obj[keys ? keys[--index] : --index];
@@ -201,8 +201,8 @@
     if (obj == null) return true;
     predicate = _.iteratee(predicate, context);
     var keys = obj.length !== +obj.length && _.keys(obj),
-    length = (keys || obj).length,
-    index, currentKey;
+        length = (keys || obj).length,
+        index, currentKey;
     for (index = 0; index < length; index++) {
       currentKey = keys ? keys[index] : index;
       if (!predicate(obj[currentKey], currentKey, obj)) return false;
@@ -216,8 +216,8 @@
     if (obj == null) return false;
     predicate = _.iteratee(predicate, context);
     var keys = obj.length !== +obj.length && _.keys(obj),
-    length = (keys || obj).length,
-    index, currentKey;
+        length = (keys || obj).length,
+        index, currentKey;
     for (index = 0; index < length; index++) {
       currentKey = keys ? keys[index] : index;
       if (predicate(obj[currentKey], currentKey, obj)) return true;
@@ -262,7 +262,7 @@
   // Return the maximum element (or element-based computation).
   _.max = function(obj, iteratee, context) {
     var result = -Infinity, lastComputed = -Infinity,
-    value, computed;
+        value, computed;
     if (iteratee == null && obj != null) {
       obj = obj.length === +obj.length ? obj : _.values(obj);
       for (var i = 0, length = obj.length; i < length; i++) {
@@ -287,7 +287,7 @@
   // Return the minimum element (or element-based computation).
   _.min = function(obj, iteratee, context) {
     var result = Infinity, lastComputed = Infinity,
-    value, computed;
+        value, computed;
     if (iteratee == null && obj != null) {
       obj = obj.length === +obj.length ? obj : _.values(obj);
       for (var i = 0, length = obj.length; i < length; i++) {
@@ -903,7 +903,7 @@
       source = arguments[i];
       for (prop in source) {
         if (hasOwnProperty.call(source, prop)) {
-          obj[prop] = source[prop];
+            obj[prop] = source[prop];
         }
       }
     }
@@ -931,7 +931,7 @@
     return result;
   };
 
-  // Return a copy of the object without the blacklisted properties.
+   // Return a copy of the object without the blacklisted properties.
   _.omit = function(obj, iteratee, context) {
     if (_.isFunction(iteratee)) {
       iteratee = _.negate(iteratee);
@@ -986,431 +986,431 @@
     switch (className) {
       // Strings, numbers, regular expressions, dates, and booleans are compared by value.
       case '[object RegExp]':
-        // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
-        case '[object String]':
-          // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
-          // equivalent to `new String("5")`.
-          return '' + a === '' + b;
-          case '[object Number]':
-            // `NaN`s are equivalent, but non-reflexive.
-            // Object(NaN) is equivalent to NaN
-            if (+a !== +a) return +b !== +b;
-            // An `egal` comparison is performed for other numeric values.
-            return +a === 0 ? 1 / +a === 1 / b : +a === +b;
-            case '[object Date]':
-              case '[object Boolean]':
-                // Coerce dates and booleans to numeric primitive values. Dates are compared by their
-                // millisecond representations. Note that invalid dates with millisecond representations
-                // of `NaN` are not equivalent.
-                return +a === +b;
-              }
-              if (typeof a != 'object' || typeof b != 'object') return false;
-              // Assume equality for cyclic structures. The algorithm for detecting cyclic
-              // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
-              var length = aStack.length;
-              while (length--) {
-                // Linear search. Performance is inversely proportional to the number of
-                // unique nested structures.
-                if (aStack[length] === a) return bStack[length] === b;
-              }
-              // Objects with different constructors are not equivalent, but `Object`s
-              // from different frames are.
-              var aCtor = a.constructor, bCtor = b.constructor;
-              if (
-                aCtor !== bCtor &&
-                // Handle Object.create(x) cases
-                'constructor' in a && 'constructor' in b &&
-                !(_.isFunction(aCtor) && aCtor instanceof aCtor &&
-                _.isFunction(bCtor) && bCtor instanceof bCtor)
-              ) {
-                return false;
-              }
-              // Add the first object to the stack of traversed objects.
-              aStack.push(a);
-              bStack.push(b);
-              var size, result;
-              // Recursively compare objects and arrays.
-              if (className === '[object Array]') {
-                // Compare array lengths to determine if a deep comparison is necessary.
-                size = a.length;
-                result = size === b.length;
-                if (result) {
-                  // Deep compare the contents, ignoring non-numeric properties.
-                  while (size--) {
-                    if (!(result = eq(a[size], b[size], aStack, bStack))) break;
-                  }
-                }
-              } else {
-                // Deep compare objects.
-                var keys = _.keys(a), key;
-                size = keys.length;
-                // Ensure that both objects contain the same number of properties before comparing deep equality.
-                result = _.keys(b).length === size;
-                if (result) {
-                  while (size--) {
-                    // Deep compare each member
-                    key = keys[size];
-                    if (!(result = _.has(b, key) && eq(a[key], b[key], aStack, bStack))) break;
-                  }
-                }
-              }
-              // Remove the first object from the stack of traversed objects.
-              aStack.pop();
-              bStack.pop();
-              return result;
-            };
+      // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
+      case '[object String]':
+        // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
+        // equivalent to `new String("5")`.
+        return '' + a === '' + b;
+      case '[object Number]':
+        // `NaN`s are equivalent, but non-reflexive.
+        // Object(NaN) is equivalent to NaN
+        if (+a !== +a) return +b !== +b;
+        // An `egal` comparison is performed for other numeric values.
+        return +a === 0 ? 1 / +a === 1 / b : +a === +b;
+      case '[object Date]':
+      case '[object Boolean]':
+        // Coerce dates and booleans to numeric primitive values. Dates are compared by their
+        // millisecond representations. Note that invalid dates with millisecond representations
+        // of `NaN` are not equivalent.
+        return +a === +b;
+    }
+    if (typeof a != 'object' || typeof b != 'object') return false;
+    // Assume equality for cyclic structures. The algorithm for detecting cyclic
+    // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
+    var length = aStack.length;
+    while (length--) {
+      // Linear search. Performance is inversely proportional to the number of
+      // unique nested structures.
+      if (aStack[length] === a) return bStack[length] === b;
+    }
+    // Objects with different constructors are not equivalent, but `Object`s
+    // from different frames are.
+    var aCtor = a.constructor, bCtor = b.constructor;
+    if (
+      aCtor !== bCtor &&
+      // Handle Object.create(x) cases
+      'constructor' in a && 'constructor' in b &&
+      !(_.isFunction(aCtor) && aCtor instanceof aCtor &&
+        _.isFunction(bCtor) && bCtor instanceof bCtor)
+    ) {
+      return false;
+    }
+    // Add the first object to the stack of traversed objects.
+    aStack.push(a);
+    bStack.push(b);
+    var size, result;
+    // Recursively compare objects and arrays.
+    if (className === '[object Array]') {
+      // Compare array lengths to determine if a deep comparison is necessary.
+      size = a.length;
+      result = size === b.length;
+      if (result) {
+        // Deep compare the contents, ignoring non-numeric properties.
+        while (size--) {
+          if (!(result = eq(a[size], b[size], aStack, bStack))) break;
+        }
+      }
+    } else {
+      // Deep compare objects.
+      var keys = _.keys(a), key;
+      size = keys.length;
+      // Ensure that both objects contain the same number of properties before comparing deep equality.
+      result = _.keys(b).length === size;
+      if (result) {
+        while (size--) {
+          // Deep compare each member
+          key = keys[size];
+          if (!(result = _.has(b, key) && eq(a[key], b[key], aStack, bStack))) break;
+        }
+      }
+    }
+    // Remove the first object from the stack of traversed objects.
+    aStack.pop();
+    bStack.pop();
+    return result;
+  };
 
-            // Perform a deep comparison to check if two objects are equal.
-            _.isEqual = function(a, b) {
-              return eq(a, b, [], []);
-            };
+  // Perform a deep comparison to check if two objects are equal.
+  _.isEqual = function(a, b) {
+    return eq(a, b, [], []);
+  };
 
-            // Is a given array, string, or object empty?
-            // An "empty" object has no enumerable own-properties.
-            _.isEmpty = function(obj) {
-              if (obj == null) return true;
-              if (_.isArray(obj) || _.isString(obj) || _.isArguments(obj)) return obj.length === 0;
-              for (var key in obj) if (_.has(obj, key)) return false;
-              return true;
-            };
+  // Is a given array, string, or object empty?
+  // An "empty" object has no enumerable own-properties.
+  _.isEmpty = function(obj) {
+    if (obj == null) return true;
+    if (_.isArray(obj) || _.isString(obj) || _.isArguments(obj)) return obj.length === 0;
+    for (var key in obj) if (_.has(obj, key)) return false;
+    return true;
+  };
 
-            // Is a given value a DOM element?
-            _.isElement = function(obj) {
-              return !!(obj && obj.nodeType === 1);
-            };
+  // Is a given value a DOM element?
+  _.isElement = function(obj) {
+    return !!(obj && obj.nodeType === 1);
+  };
 
-            // Is a given value an array?
-            // Delegates to ECMA5's native Array.isArray
-            _.isArray = nativeIsArray || function(obj) {
-              return toString.call(obj) === '[object Array]';
-            };
+  // Is a given value an array?
+  // Delegates to ECMA5's native Array.isArray
+  _.isArray = nativeIsArray || function(obj) {
+    return toString.call(obj) === '[object Array]';
+  };
 
-            // Is a given variable an object?
-            _.isObject = function(obj) {
-              var type = typeof obj;
-              return type === 'function' || type === 'object' && !!obj;
-            };
+  // Is a given variable an object?
+  _.isObject = function(obj) {
+    var type = typeof obj;
+    return type === 'function' || type === 'object' && !!obj;
+  };
 
-            // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp.
-            _.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp'], function(name) {
-              _['is' + name] = function(obj) {
-                return toString.call(obj) === '[object ' + name + ']';
-              };
-            });
+  // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp.
+  _.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp'], function(name) {
+    _['is' + name] = function(obj) {
+      return toString.call(obj) === '[object ' + name + ']';
+    };
+  });
 
-            // Define a fallback version of the method in browsers (ahem, IE), where
-            // there isn't any inspectable "Arguments" type.
-            if (!_.isArguments(arguments)) {
-              _.isArguments = function(obj) {
-                return _.has(obj, 'callee');
-              };
-            }
+  // Define a fallback version of the method in browsers (ahem, IE), where
+  // there isn't any inspectable "Arguments" type.
+  if (!_.isArguments(arguments)) {
+    _.isArguments = function(obj) {
+      return _.has(obj, 'callee');
+    };
+  }
 
-            // Optimize `isFunction` if appropriate. Work around an IE 11 bug.
-            if (typeof /./ !== 'function') {
-              _.isFunction = function(obj) {
-                return typeof obj == 'function' || false;
-              };
-            }
+  // Optimize `isFunction` if appropriate. Work around an IE 11 bug.
+  if (typeof /./ !== 'function') {
+    _.isFunction = function(obj) {
+      return typeof obj == 'function' || false;
+    };
+  }
 
-            // Is a given object a finite number?
-            _.isFinite = function(obj) {
-              return isFinite(obj) && !isNaN(parseFloat(obj));
-            };
+  // Is a given object a finite number?
+  _.isFinite = function(obj) {
+    return isFinite(obj) && !isNaN(parseFloat(obj));
+  };
 
-            // Is the given value `NaN`? (NaN is the only number which does not equal itself).
-            _.isNaN = function(obj) {
-              return _.isNumber(obj) && obj !== +obj;
-            };
+  // Is the given value `NaN`? (NaN is the only number which does not equal itself).
+  _.isNaN = function(obj) {
+    return _.isNumber(obj) && obj !== +obj;
+  };
 
-            // Is a given value a boolean?
-            _.isBoolean = function(obj) {
-              return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
-            };
+  // Is a given value a boolean?
+  _.isBoolean = function(obj) {
+    return obj === true || obj === false || toString.call(obj) === '[object Boolean]';
+  };
 
-            // Is a given value equal to null?
-            _.isNull = function(obj) {
-              return obj === null;
-            };
+  // Is a given value equal to null?
+  _.isNull = function(obj) {
+    return obj === null;
+  };
 
-            // Is a given variable undefined?
-            _.isUndefined = function(obj) {
-              return obj === void 0;
-            };
+  // Is a given variable undefined?
+  _.isUndefined = function(obj) {
+    return obj === void 0;
+  };
 
-            // Shortcut function for checking if an object has a given property directly
-            // on itself (in other words, not on a prototype).
-            _.has = function(obj, key) {
-              return obj != null && hasOwnProperty.call(obj, key);
-            };
+  // Shortcut function for checking if an object has a given property directly
+  // on itself (in other words, not on a prototype).
+  _.has = function(obj, key) {
+    return obj != null && hasOwnProperty.call(obj, key);
+  };
 
-            // Utility Functions
-            // -----------------
+  // Utility Functions
+  // -----------------
 
-            // Run Underscore.js in *noConflict* mode, returning the `_` variable to its
-            // previous owner. Returns a reference to the Underscore object.
-            _.noConflict = function() {
-              root._ = previousUnderscore;
-              return this;
-            };
+  // Run Underscore.js in *noConflict* mode, returning the `_` variable to its
+  // previous owner. Returns a reference to the Underscore object.
+  _.noConflict = function() {
+    root._ = previousUnderscore;
+    return this;
+  };
 
-            // Keep the identity function around for default iteratees.
-            _.identity = function(value) {
-              return value;
-            };
+  // Keep the identity function around for default iteratees.
+  _.identity = function(value) {
+    return value;
+  };
 
-            // Predicate-generating functions. Often useful outside of Underscore.
-            _.constant = function(value) {
-              return function() {
-                return value;
-              };
-            };
+  // Predicate-generating functions. Often useful outside of Underscore.
+  _.constant = function(value) {
+    return function() {
+      return value;
+    };
+  };
 
-            _.noop = function(){};
+  _.noop = function(){};
 
-            _.property = function(key) {
-              return function(obj) {
-                return obj[key];
-              };
-            };
+  _.property = function(key) {
+    return function(obj) {
+      return obj[key];
+    };
+  };
 
-            // Returns a predicate for checking whether an object has a given set of `key:value` pairs.
-            _.matches = function(attrs) {
-              var pairs = _.pairs(attrs), length = pairs.length;
-              return function(obj) {
-                if (obj == null) return !length;
-                obj = new Object(obj);
-                for (var i = 0; i < length; i++) {
-                  var pair = pairs[i], key = pair[0];
-                  if (pair[1] !== obj[key] || !(key in obj)) return false;
-                }
-                return true;
-              };
-            };
+  // Returns a predicate for checking whether an object has a given set of `key:value` pairs.
+  _.matches = function(attrs) {
+    var pairs = _.pairs(attrs), length = pairs.length;
+    return function(obj) {
+      if (obj == null) return !length;
+      obj = new Object(obj);
+      for (var i = 0; i < length; i++) {
+        var pair = pairs[i], key = pair[0];
+        if (pair[1] !== obj[key] || !(key in obj)) return false;
+      }
+      return true;
+    };
+  };
 
-            // Run a function **n** times.
-            _.times = function(n, iteratee, context) {
-              var accum = Array(Math.max(0, n));
-              iteratee = createCallback(iteratee, context, 1);
-              for (var i = 0; i < n; i++) accum[i] = iteratee(i);
-              return accum;
-            };
+  // Run a function **n** times.
+  _.times = function(n, iteratee, context) {
+    var accum = Array(Math.max(0, n));
+    iteratee = createCallback(iteratee, context, 1);
+    for (var i = 0; i < n; i++) accum[i] = iteratee(i);
+    return accum;
+  };
 
-            // Return a random integer between min and max (inclusive).
-            _.random = function(min, max) {
-              if (max == null) {
-                max = min;
-                min = 0;
-              }
-              return min + Math.floor(Math.random() * (max - min + 1));
-            };
+  // Return a random integer between min and max (inclusive).
+  _.random = function(min, max) {
+    if (max == null) {
+      max = min;
+      min = 0;
+    }
+    return min + Math.floor(Math.random() * (max - min + 1));
+  };
 
-            // A (possibly faster) way to get the current timestamp as an integer.
-            _.now = Date.now || function() {
-              return new Date().getTime();
-            };
+  // A (possibly faster) way to get the current timestamp as an integer.
+  _.now = Date.now || function() {
+    return new Date().getTime();
+  };
 
-            // List of HTML entities for escaping.
-            var escapeMap = {
-              '&': '&amp;',
-              '<': '&lt;',
-              '>': '&gt;',
-              '"': '&quot;',
-              "'": '&#x27;',
-              '`': '&#x60;'
-            };
-            var unescapeMap = _.invert(escapeMap);
+   // List of HTML entities for escaping.
+  var escapeMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '`': '&#x60;'
+  };
+  var unescapeMap = _.invert(escapeMap);
 
-            // Functions for escaping and unescaping strings to/from HTML interpolation.
-            var createEscaper = function(map) {
-              var escaper = function(match) {
-                return map[match];
-              };
-              // Regexes for identifying a key that needs to be escaped
-              var source = '(?:' + _.keys(map).join('|') + ')';
-              var testRegexp = RegExp(source);
-              var replaceRegexp = RegExp(source, 'g');
-              return function(string) {
-                string = string == null ? '' : '' + string;
-                return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
-              };
-            };
-            _.escape = createEscaper(escapeMap);
-            _.unescape = createEscaper(unescapeMap);
+  // Functions for escaping and unescaping strings to/from HTML interpolation.
+  var createEscaper = function(map) {
+    var escaper = function(match) {
+      return map[match];
+    };
+    // Regexes for identifying a key that needs to be escaped
+    var source = '(?:' + _.keys(map).join('|') + ')';
+    var testRegexp = RegExp(source);
+    var replaceRegexp = RegExp(source, 'g');
+    return function(string) {
+      string = string == null ? '' : '' + string;
+      return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
+    };
+  };
+  _.escape = createEscaper(escapeMap);
+  _.unescape = createEscaper(unescapeMap);
 
-            // If the value of the named `property` is a function then invoke it with the
-            // `object` as context; otherwise, return it.
-            _.result = function(object, property) {
-              if (object == null) return void 0;
-              var value = object[property];
-              return _.isFunction(value) ? object[property]() : value;
-            };
+  // If the value of the named `property` is a function then invoke it with the
+  // `object` as context; otherwise, return it.
+  _.result = function(object, property) {
+    if (object == null) return void 0;
+    var value = object[property];
+    return _.isFunction(value) ? object[property]() : value;
+  };
 
-            // Generate a unique integer id (unique within the entire client session).
-            // Useful for temporary DOM ids.
-            var idCounter = 0;
-            _.uniqueId = function(prefix) {
-              var id = ++idCounter + '';
-              return prefix ? prefix + id : id;
-            };
+  // Generate a unique integer id (unique within the entire client session).
+  // Useful for temporary DOM ids.
+  var idCounter = 0;
+  _.uniqueId = function(prefix) {
+    var id = ++idCounter + '';
+    return prefix ? prefix + id : id;
+  };
 
-            // By default, Underscore uses ERB-style template delimiters, change the
-            // following template settings to use alternative delimiters.
-            _.templateSettings = {
-              evaluate    : /<%([\s\S]+?)%>/g,
-              interpolate : /<%=([\s\S]+?)%>/g,
-              escape      : /<%-([\s\S]+?)%>/g
-            };
+  // By default, Underscore uses ERB-style template delimiters, change the
+  // following template settings to use alternative delimiters.
+  _.templateSettings = {
+    evaluate    : /<%([\s\S]+?)%>/g,
+    interpolate : /<%=([\s\S]+?)%>/g,
+    escape      : /<%-([\s\S]+?)%>/g
+  };
 
-            // When customizing `templateSettings`, if you don't want to define an
-            // interpolation, evaluation or escaping regex, we need one that is
-            // guaranteed not to match.
-            var noMatch = /(.)^/;
+  // When customizing `templateSettings`, if you don't want to define an
+  // interpolation, evaluation or escaping regex, we need one that is
+  // guaranteed not to match.
+  var noMatch = /(.)^/;
 
-            // Certain characters need to be escaped so that they can be put into a
-            // string literal.
-            var escapes = {
-              "'":      "'",
-              '\\':     '\\',
-              '\r':     'r',
-              '\n':     'n',
-              '\u2028': 'u2028',
-              '\u2029': 'u2029'
-            };
+  // Certain characters need to be escaped so that they can be put into a
+  // string literal.
+  var escapes = {
+    "'":      "'",
+    '\\':     '\\',
+    '\r':     'r',
+    '\n':     'n',
+    '\u2028': 'u2028',
+    '\u2029': 'u2029'
+  };
 
-            var escaper = /\\|'|\r|\n|\u2028|\u2029/g;
+  var escaper = /\\|'|\r|\n|\u2028|\u2029/g;
 
-            var escapeChar = function(match) {
-              return '\\' + escapes[match];
-            };
+  var escapeChar = function(match) {
+    return '\\' + escapes[match];
+  };
 
-            // JavaScript micro-templating, similar to John Resig's implementation.
-            // Underscore templating handles arbitrary delimiters, preserves whitespace,
-            // and correctly escapes quotes within interpolated code.
-            // NB: `oldSettings` only exists for backwards compatibility.
-            _.template = function(text, settings, oldSettings) {
-              if (!settings && oldSettings) settings = oldSettings;
-              settings = _.defaults({}, settings, _.templateSettings);
+  // JavaScript micro-templating, similar to John Resig's implementation.
+  // Underscore templating handles arbitrary delimiters, preserves whitespace,
+  // and correctly escapes quotes within interpolated code.
+  // NB: `oldSettings` only exists for backwards compatibility.
+  _.template = function(text, settings, oldSettings) {
+    if (!settings && oldSettings) settings = oldSettings;
+    settings = _.defaults({}, settings, _.templateSettings);
 
-              // Combine delimiters into one regular expression via alternation.
-              var matcher = RegExp([
-                (settings.escape || noMatch).source,
-                (settings.interpolate || noMatch).source,
-                (settings.evaluate || noMatch).source
-                ].join('|') + '|$', 'g');
+    // Combine delimiters into one regular expression via alternation.
+    var matcher = RegExp([
+      (settings.escape || noMatch).source,
+      (settings.interpolate || noMatch).source,
+      (settings.evaluate || noMatch).source
+    ].join('|') + '|$', 'g');
 
-                // Compile the template source, escaping string literals appropriately.
-                var index = 0;
-                var source = "__p+='";
-                text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
-                  source += text.slice(index, offset).replace(escaper, escapeChar);
-                  index = offset + match.length;
+    // Compile the template source, escaping string literals appropriately.
+    var index = 0;
+    var source = "__p+='";
+    text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
+      source += text.slice(index, offset).replace(escaper, escapeChar);
+      index = offset + match.length;
 
-                  if (escape) {
-                    source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
-                  } else if (interpolate) {
-                    source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
-                  } else if (evaluate) {
-                    source += "';\n" + evaluate + "\n__p+='";
-                  }
+      if (escape) {
+        source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
+      } else if (interpolate) {
+        source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
+      } else if (evaluate) {
+        source += "';\n" + evaluate + "\n__p+='";
+      }
 
-                  // Adobe VMs need the match returned to produce the correct offest.
-                  return match;
-                });
-                source += "';\n";
+      // Adobe VMs need the match returned to produce the correct offest.
+      return match;
+    });
+    source += "';\n";
 
-                // If a variable is not specified, place data values in local scope.
-                if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
+    // If a variable is not specified, place data values in local scope.
+    if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
 
-                source = "var __t,__p='',__j=Array.prototype.join," +
-                "print=function(){__p+=__j.call(arguments,'');};\n" +
-                source + 'return __p;\n';
+    source = "var __t,__p='',__j=Array.prototype.join," +
+      "print=function(){__p+=__j.call(arguments,'');};\n" +
+      source + 'return __p;\n';
 
-                try {
-                  var render = new Function(settings.variable || 'obj', '_', source);
-                } catch (e) {
-                  e.source = source;
-                  throw e;
-                }
+    try {
+      var render = new Function(settings.variable || 'obj', '_', source);
+    } catch (e) {
+      e.source = source;
+      throw e;
+    }
 
-                var template = function(data) {
-                  return render.call(this, data, _);
-                };
+    var template = function(data) {
+      return render.call(this, data, _);
+    };
 
-                // Provide the compiled source as a convenience for precompilation.
-                var argument = settings.variable || 'obj';
-                template.source = 'function(' + argument + '){\n' + source + '}';
+    // Provide the compiled source as a convenience for precompilation.
+    var argument = settings.variable || 'obj';
+    template.source = 'function(' + argument + '){\n' + source + '}';
 
-                return template;
-              };
+    return template;
+  };
 
-              // Add a "chain" function. Start chaining a wrapped Underscore object.
-              _.chain = function(obj) {
-                var instance = _(obj);
-                instance._chain = true;
-                return instance;
-              };
+  // Add a "chain" function. Start chaining a wrapped Underscore object.
+  _.chain = function(obj) {
+    var instance = _(obj);
+    instance._chain = true;
+    return instance;
+  };
 
-              // OOP
-              // ---------------
-              // If Underscore is called as a function, it returns a wrapped object that
-              // can be used OO-style. This wrapper holds altered versions of all the
-              // underscore functions. Wrapped objects may be chained.
+  // OOP
+  // ---------------
+  // If Underscore is called as a function, it returns a wrapped object that
+  // can be used OO-style. This wrapper holds altered versions of all the
+  // underscore functions. Wrapped objects may be chained.
 
-              // Helper function to continue chaining intermediate results.
-              var result = function(obj) {
-                return this._chain ? _(obj).chain() : obj;
-              };
+  // Helper function to continue chaining intermediate results.
+  var result = function(obj) {
+    return this._chain ? _(obj).chain() : obj;
+  };
 
-              // Add your own custom functions to the Underscore object.
-              _.mixin = function(obj) {
-                _.each(_.functions(obj), function(name) {
-                  var func = _[name] = obj[name];
-                  _.prototype[name] = function() {
-                    var args = [this._wrapped];
-                    push.apply(args, arguments);
-                    return result.call(this, func.apply(_, args));
-                  };
-                });
-              };
+  // Add your own custom functions to the Underscore object.
+  _.mixin = function(obj) {
+    _.each(_.functions(obj), function(name) {
+      var func = _[name] = obj[name];
+      _.prototype[name] = function() {
+        var args = [this._wrapped];
+        push.apply(args, arguments);
+        return result.call(this, func.apply(_, args));
+      };
+    });
+  };
 
-              // Add all of the Underscore functions to the wrapper object.
-              _.mixin(_);
+  // Add all of the Underscore functions to the wrapper object.
+  _.mixin(_);
 
-              // Add all mutator Array functions to the wrapper.
-              _.each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
-                var method = ArrayProto[name];
-                _.prototype[name] = function() {
-                  var obj = this._wrapped;
-                  method.apply(obj, arguments);
-                  if ((name === 'shift' || name === 'splice') && obj.length === 0) delete obj[0];
-                  return result.call(this, obj);
-                };
-              });
+  // Add all mutator Array functions to the wrapper.
+  _.each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
+    var method = ArrayProto[name];
+    _.prototype[name] = function() {
+      var obj = this._wrapped;
+      method.apply(obj, arguments);
+      if ((name === 'shift' || name === 'splice') && obj.length === 0) delete obj[0];
+      return result.call(this, obj);
+    };
+  });
 
-              // Add all accessor Array functions to the wrapper.
-              _.each(['concat', 'join', 'slice'], function(name) {
-                var method = ArrayProto[name];
-                _.prototype[name] = function() {
-                  return result.call(this, method.apply(this._wrapped, arguments));
-                };
-              });
+  // Add all accessor Array functions to the wrapper.
+  _.each(['concat', 'join', 'slice'], function(name) {
+    var method = ArrayProto[name];
+    _.prototype[name] = function() {
+      return result.call(this, method.apply(this._wrapped, arguments));
+    };
+  });
 
-              // Extracts the result from a wrapped and chained object.
-              _.prototype.value = function() {
-                return this._wrapped;
-              };
+  // Extracts the result from a wrapped and chained object.
+  _.prototype.value = function() {
+    return this._wrapped;
+  };
 
-              // AMD registration happens at the end for compatibility with AMD loaders
-              // that may not enforce next-turn semantics on modules. Even though general
-              // practice for AMD registration is to be anonymous, underscore registers
-              // as a named module because, like jQuery, it is a base library that is
-              // popular enough to be bundled in a third party lib, but not be part of
-              // an AMD load request. Those cases could generate an error when an
-              // anonymous define() is called outside of a loader request.
-              if (typeof define === 'function' && define.amd) {
-                define('underscore', [], function() {
-                  return _;
-                });
-              }
-            }.call(this));
+  // AMD registration happens at the end for compatibility with AMD loaders
+  // that may not enforce next-turn semantics on modules. Even though general
+  // practice for AMD registration is to be anonymous, underscore registers
+  // as a named module because, like jQuery, it is a base library that is
+  // popular enough to be bundled in a third party lib, but not be part of
+  // an AMD load request. Those cases could generate an error when an
+  // anonymous define() is called outside of a loader request.
+  if (typeof define === 'function' && define.amd) {
+    define('underscore', [], function() {
+      return _;
+    });
+  }
+}.call(this));
