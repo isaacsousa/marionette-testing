@@ -24,6 +24,14 @@
 			<p>This is text that was rendered by our Marionette app.</p>
 		</script>
 
+		<script type="text/template" id="different-static-template">
+			<p>Text from a different template.</p>
+		</script>
+
+		<script type="text/template" id="contact-template">
+			<p><%- firstName %> <%- lastName %></p>
+		</script>
+
 		<script src="./assets/js/vendor/jquery.js"></script>
 		<script src="./assets/js/vendor/json2.js"></script>
 		<script src="./assets/js/vendor/underscore.js"></script>
@@ -38,14 +46,38 @@
 				mainRegion: "#main-region"
 			});
 
+			ContactManager.Contact = Backbone.Model.extend({});
+
 			ContactManager.StaticView = Marionette.ItemView.extend({
 				template: "#static-template"
 			});
 
+			ContactManager.ContactView = Marionette.ItemView.extend({
+				template: "#contact-template"
+			});
+
 			ContactManager.on("start", function() {
 				console.log("ContactManager has started!");
-				var staticView = new ContactManager.StaticView();
+				var staticView = new ContactManager.StaticView({
+					id: "static-view",
+					tagName: "span",
+					className: "instruction",
+					template: "#different-static-template"
+				});
+
+				var alice = new ContactManager.Contact({
+					firstName: "Alice",
+					lastName: "Arten",
+					phoneNumber: "555-0184"
+				});
+
+				var aliceView = new ContactManager.ContactView({
+					model: alice
+				});
+
 				ContactManager.mainRegion.show(staticView);
+
+				ContactManager.mainRegion.show(aliceView);
 			});
 			ContactManager.start();
 		</script>
