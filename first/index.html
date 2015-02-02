@@ -41,35 +41,11 @@
 		<script src="./assets/js/vendor/underscore.js"></script>
 		<script src="./assets/js/vendor/backbone.js"></script>
 		<script src="./assets/js/vendor/backbone.marionette.js"></script>
+		<script src="./assets/js/app.js"></script>
+		<script src="./assets/js/entities/contacts.js"></script>
 
 
 		<script type="text/javascript">
-			var ContactManager = new Marionette.Application();
-
-			ContactManager.addRegions({
-				mainRegion: "#main-region"
-			});
-
-			ContactManager.Contact = Backbone.Model.extend({
-				defaults: {
-					firstName: "",
-					phoneNumber: "No Phone Number!"
-				}
-			});
-
-			ContactManager.StaticView = Marionette.ItemView.extend({
-				template: "#static-template"
-			});
-
-			ContactManager.ContactView = Marionette.ItemView.extend({
-				template: "#contact-template",
-				events: {
-					"click p": "alertPhoneNumber"
-				},
-				alertPhoneNumber: function () {
-					alert(this.model.escape("phoneNumber"));
-				}
-			});
 
 			ContactManager.ContactItemView = Marionette.ItemView.extend({
 				tagName: "li",
@@ -82,68 +58,14 @@
 			});
 
 
-			ContactManager.ContactCollection = Backbone.Collection.extend({
-					model: ContactManager.Contact,
-					comparator: "firstName"
-				});
-
 			ContactManager.on("start", function() {
 				console.log("ContactManager has started!");
-				var staticView = new ContactManager.StaticView({
-					id: "static-view",
-					tagName: "span",
-					className: "instruction",
-					template: "#different-static-template"
-				});
 
-				var alice = new ContactManager.Contact({
-					firstName: "Alice",
-					lastName: "Arten",
-					phoneNumber: "555-0184"
-				});
-
-
-				var modelWithoutPhoneNumber = new ContactManager.Contact({
-					firstName: "John",
-					lastName: "Johnson"
-				});
-
-				var aliceView = new ContactManager.ContactView({
-					model: alice
-				});
-
-				var noPhoneView = new ContactManager.ContactView({
-					model: modelWithoutPhoneNumber
-				});
-
-				var contacts = new ContactManager.ContactCollection([
-					{
-						firstName: "Bob",
-						lastName: "Brigham",
-						phoneNumber: "555-0163"
-					},
-					{
-						firstName: "Alice",
-						lastName: "Arten",
-						phoneNumber: "555-0184"
-					},
-					{
-						firstName: "Charlie",
-						lastName: "Campbell",
-						phoneNumber: "555-0129"
-					}
-				]);
+				var contacts = ContactManager.request("contact:entities");
 
 				var contactsListView = new ContactManager.ContactsView({
 					collection: contacts
 				});
-
-
-				ContactManager.mainRegion.show(staticView);
-
-				ContactManager.mainRegion.show(aliceView);
-
-				ContactManager.mainRegion.show(noPhoneView);
 
 				ContactManager.mainRegion.show(contactsListView);
 			});
