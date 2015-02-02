@@ -29,7 +29,7 @@
 		</script>
 
 		<script type="text/template" id="contact-template">
-			<p><%- firstName %> <%- lastName %></p>
+			<p class="contact-fullname"><%- firstName %> <%- lastName %></p>
 		</script>
 
 		<script src="./assets/js/vendor/jquery.js"></script>
@@ -46,14 +46,25 @@
 				mainRegion: "#main-region"
 			});
 
-			ContactManager.Contact = Backbone.Model.extend({});
+			ContactManager.Contact = Backbone.Model.extend({
+				defaults: {
+					firstName: "",
+					phoneNumber: "No Phone Number!"
+				}
+			});
 
 			ContactManager.StaticView = Marionette.ItemView.extend({
 				template: "#static-template"
 			});
 
 			ContactManager.ContactView = Marionette.ItemView.extend({
-				template: "#contact-template"
+				template: "#contact-template",
+				events: {
+					"click p": "alertPhoneNumber"
+				},
+				alertPhoneNumber: function () {
+					alert(this.model.escape("phoneNumber"));
+				}
 			});
 
 			ContactManager.on("start", function() {
@@ -71,13 +82,25 @@
 					phoneNumber: "555-0184"
 				});
 
+
+				var modelWithoutPhoneNumber = new ContactManager.Contact({
+					firstName: "John",
+					lastName: "Johnson"
+				});
+
 				var aliceView = new ContactManager.ContactView({
 					model: alice
+				});
+
+				var noPhoneView = new ContactManager.ContactView({
+					model: modelWithoutPhoneNumber
 				});
 
 				ContactManager.mainRegion.show(staticView);
 
 				ContactManager.mainRegion.show(aliceView);
+
+				ContactManager.mainRegion.show(noPhoneView);
 			});
 			ContactManager.start();
 		</script>
