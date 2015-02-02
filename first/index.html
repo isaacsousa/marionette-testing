@@ -83,7 +83,8 @@
 
 
 			ContactManager.ContactCollection = Backbone.Collection.extend({
-					model: ContactManager.Contact
+					model: ContactManager.Contact,
+					comparator: "firstName"
 				});
 
 			ContactManager.on("start", function() {
